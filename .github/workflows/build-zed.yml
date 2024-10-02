@@ -1,0 +1,29 @@
+name: Build Zed Editor for Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout official Zed editor repo
+      run: |
+        git clone https://github.com/zed-industries/zed.git
+
+    - name: Install Rust and toolchain
+      run: |
+        rustup update
+        rustup target add wasm32-wasip1
+
+    - name: Build Zed Editor
+      run: |
+        cd zed
+        cargo build --release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: zed-editor
+        path: zed\target\release\zed.exe
